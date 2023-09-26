@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  email    String @id
+  password String
+}
+
+model Book {
+  id                String        @id @default(uuid())
+  title             String
+  author            String
+  genre             String
+  image             String
+  systemEntryDate   DateTime      @default(now())
+  synopsis          String
+  isRented          Boolean       @default(false)
+  isActive          Boolean       @default(true)
+  statusDescription String        @default("active")
+  RentHistory       RentHistory[]
+}
+
+model RentHistory {
+  id             String   @id @default(uuid())
+  studentName    String
+  class          String
+  withdrawalDate DateTime @default(now())
+  deliveryDate   DateTime
+  bookId         String
+  book           Book     @relation(fields: [bookId], references: [id])
+}
